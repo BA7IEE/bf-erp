@@ -55,7 +55,7 @@ onMounted(() => {});
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
-          v-model="form.name"
+          v-model="form.phone"
           placeholder="请输入手机号"
           clearable
           class="!w-[180px]"

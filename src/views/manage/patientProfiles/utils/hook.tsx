@@ -1,7 +1,5 @@
-// import dayjs from "dayjs";
 import editForm from "../form.vue";
 import { message } from "@/utils/message";
-// import { ElMessageBox } from "element-plus";
 import { addDialog } from "@/components/ReDialog";
 import type { FormItemProps } from "./types";
 import type { PaginationProps } from "@pureadmin/table";
@@ -21,7 +19,6 @@ export function useRole() {
   const isShow = ref(false);
   const loading = ref(true);
   const isLinkage = ref(false);
-  const productsCategoryList = ref([]);
   const libsList = ref([]);
   let listener = null;
 
@@ -31,6 +28,7 @@ export function useRole() {
     currentPage: 1,
     background: true
   });
+
   const columns: TableColumnList = [
     {
       label: "ID",
@@ -253,32 +251,31 @@ export function useRole() {
 
   async function onSearch() {
     loading.value = true;
-    let where = [];
+    let conditions: Record<string, any> = {};
     if (form.libs) {
-      where.push(["product_lab", "LIKE", form.libs]);
+      conditions.lab = form.libs;
     }
     if (form.name) {
-      where.push(["patient_name", "LIKE", form.name]);
+      conditions["patient_name LIKE ?"] = `%${form.name}%`;
     }
     if (form.phone) {
-      where.push(["patient_phone", "LIKE", form.phone]);
-    }
-    let formData = {
-      model_name: "PatientProfiles",
-      uuid: window.localStorage.getItem("uuid"),
-      token: window.localStorage.getItem("token"),
-      page: pagination.currentPage,
-      perpage: pagination.pageSize,
-      logic: "and",
-      where: null
-    };
-    if (where.length) {
-      formData.where = JSON.stringify(where);
+      conditions["patient_phone LIKE ?"] = `%${form.phone}%`;
     }
 
-    const { data } = await getList(toRaw(formData));
-    dataList.value = data?.list;
-    pagination.total = data?.total;
+    let formData: Record<string, any> = {
+      return_data: 1,
+      model_name: "PatientProfiles",
+      page: pagination.currentPage,
+      perpage: pagination.pageSize
+    };
+
+    if (Object.keys(conditions).length > 0) {
+      formData.conditions = JSON.stringify(conditions);
+    }
+
+    const data = await getList(toRaw(formData));
+    dataList.value = data.items;
+    pagination.total = data.total;
     pagination.pageSize = data.perpage;
     pagination.currentPage = data.page;
 
@@ -287,26 +284,12 @@ export function useRole() {
     }, 500);
   }
 
-  async function getProductsCategory() {
-    const { data } = await getList(
-      toRaw({
-        model_name: "ProductsCategory",
-        uuid: window.localStorage.getItem("uuid"),
-        token: window.localStorage.getItem("token")
-      })
-    );
-    productsCategoryList.value = data.list;
-  }
-
   async function getLibs() {
-    const { data } = await getList(
-      toRaw({
-        model_name: "Labs",
-        uuid: window.localStorage.getItem("uuid"),
-        token: window.localStorage.getItem("token")
-      })
-    );
-    libsList.value = data.list;
+    const data = await getList({
+      return_data: 1,
+      model_name: "Labs"
+    });
+    libsList.value = data.items;
   }
 
   const resetForm = formEl => {
@@ -382,7 +365,7 @@ export function useRole() {
               };
               console.log(form);
 
-              const { data } = await updateData(toRaw(form));
+              const data = await updateData(toRaw(form));
               if (data.err_code === 0) {
                 message(`修改成功`, {
                   type: "success"
@@ -399,19 +382,15 @@ export function useRole() {
     });
   }
 
-  /** 高亮当前权限选中行 */
   function rowStyle({ row: { id } }) {
     return {
       cursor: "pointer",
       background: id === curRow.value?.id ? "var(--el-fill-color-light)" : ""
     };
   }
-  /** 数据权限 可自行开发 */
-  // function handleDatabase() {}
 
   onMounted(async () => {
     onSearch();
-    getProductsCategory();
     getLibs();
     listener = e => {
       if (e.keyCode === 13) {
@@ -442,7 +421,6 @@ export function useRole() {
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,
-    libsList,
-    productsCategoryList
+    libsList
   };
 }
