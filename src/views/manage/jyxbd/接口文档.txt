@@ -1,0 +1,97 @@
+表单名：JyxbdPj
+CREATE TABLE JyxbdPj (
+    id INT PRIMARY KEY,                    -- 项目ID
+    subsidiary VARCHAR(255),               -- 子公司
+    product_name VARCHAR(255),             -- 项目名称
+    activated int,                         -- 是否激活（1启用，2停用）
+    projectCode VARCHAR(50),               -- 项目代码
+    chargeCode VARCHAR(50),                -- 收费代码
+    tollStandard VARCHAR(255),             -- 标准收费
+    supplement TEXT,                       -- 补充说明
+    sample VARCHAR(255),                   -- 样本类型
+    tutorial TEXT,                         -- 使用说明
+    preservation TEXT,                     -- 保存方法
+    transportation TEXT,                   -- 运输方法
+    applicationUnitType VARCHAR(100),      -- 申请单类型
+    medicalMethod TEXT,                    -- 医疗方法
+    projectConcourse VARCHAR(255),         -- 项目所属科室
+    hurryDepartment VARCHAR(255),          -- 加急部门
+    reportingTime VARCHAR(100),            -- 报告时间
+    clinicalApplication TEXT,              -- 临床应用说明
+    series VARCHAR(255),                   -- 系列
+    subSeries VARCHAR(255),                -- 子系列
+    remarks TEXT                           -- 备注
+);
+
+接口参数：
+return_data=1（必填）返回简洁的数据结构
+page：整数 分页
+perpage：整数 分页数量
+model_name：字符串 数据库表名
+conditions:用于设置查询的过滤条件。键为字段名，值为要匹配的具体值。支持简单的等值匹配。对于复杂的条件（如大于、小于、IN 等），请直接使用原生 SQL 语法字符串作为键。示例: { "product_category < ?": 10, "product_lab": 1, "settlement_price < ?": 500, "standard_charge > ?": 100 }
+order:指定结果的排序规则。每个数组元素是一个字符串，包含字段名和排序方向（ASC 或 DESC）。示例: ["created_at DESC", "name ASC"]
+fields:指定返回结果中包含的字段。每个数组元素是一个字符串，表示要返回的字段名。示例: ["name", "description", "price"]
+返回数据结构：
+{
+    "success": true,
+    "err_code": 0,
+    "err_msg": "",
+    "total": 9933,
+    "items": [
+        {
+            "id": 9933,
+            "uuid": "",
+            "add_time": "2024-10-15 20:59:49",
+            "update_time": null,
+            "ext_data": null,
+            "subsidiary": "广州",
+            "product_name": "实体肿瘤精准诊疗 Mini 套餐（FFPE)",
+            "activated": 1,
+            "projectCode": "82584",
+            "chargeCode": "JYZB00207",
+            "tollStandard": "3000元",
+            "supplement": "蜡块或15-20 张 5-6um 厚 白片或蜡卷 (附 H&E 片一张)+2-3ml EDTA 抗凝外周血样本（必须同时送检）",
+            "sample": "EDTA 抗凝管",
+            "tutorial": "血与组织必须同时送检",
+            "preservation": "【室温保存】24h 【冷藏保存】72h 【冷冻保存】禁止（血标本）;  【常温保存】7天（白片），1年 （蜡块）。",
+            "transportation": "室温送检",
+            "applicationUnitType": "",
+            "medicalMethod": "NGS",
+            "projectConcourse": "（广州）基因组中心",
+            "hurryDepartment": "基因组中心客服对接岗",
+            "reportingTime": "到科室6-7个工作日",
+            "clinicalApplication": "【46个体系基因+MSI+2 个化疗基因】ALK、BRAF、BRCA1、BRCA12、CDH1、CDKN2A、CDKN2B、CTNNB1、EGFR、ERBB2、FGFR2、FGFR3、FOXL2、GNA11、GNAQ、GNAS、H3-3A、H2-3B、HRAS、IDH1、IDH2、KIT、KRAS、MET、MLH1、MSH2、MSH6、MYOD1、NF1、NRAS、NTRK1、PALB2、PDGFRA、PIK3CA、PMS2、POLE、PTEN、RET、ROS1、SDHA、SDHB、SDHC、SDHD、TP53、TERT、FGFR1、PAX8、PPARG、SDC4、SLC34A2；MSI ：BAT25、BAT26、D5S346、D2S123、D17S250 。DPYD ：rs1801159、rs3918290、rs55886062、rs67376798 ；UGT1A1： rs4148323、rs8175347 。\n增加FH、BCOR、DICER1、AKT1、ARAF、RAF1、EML4、KIF5B、EZR、CD74、ESR1、rs1801160、rs1801265、rs75017182\t61个体系基因+MSI+2个化疗基因",
+            "series": "",
+            "subSeries": "",
+            "remarks": "广州金域关于开展“胃肠间质瘤、乳腺癌、卵巢癌、膀胱癌、前列腺癌、胰腺癌、黑色素瘤、mini套餐（FFPE/ctDNA)”以及“实体肿瘤精准诊疗Mini套餐（FFPE/ctDNA)”项目的通知"
+        },
+        {
+            "id": 9932,
+            "uuid": "",
+            "add_time": "2024-10-15 20:59:49",
+            "update_time": null,
+            "ext_data": null,
+            "subsidiary": "广州",
+            "product_name": "胃肠间质瘤精准诊疗Mini套餐（ctDNA)",
+            "activated": 1,
+            "projectCode": "82615",
+            "chargeCode": "",
+            "tollStandard": "2500元",
+            "supplement": "全血：8-10ml",
+            "sample": "无创管",
+            "tutorial": null,
+            "preservation": "【室温保存】24h 【冷藏保存】5-7天 【冷冻保存】禁止",
+            "transportation": "冷藏运输",
+            "applicationUnitType": "",
+            "medicalMethod": "二代测序(NGS)",
+            "projectConcourse": "（广州）基因组中心",
+            "hurryDepartment": "基因组中心客服对接岗",
+            "reportingTime": "实验室接收起6-7天",
+            "clinicalApplication": "【13 个体系突变基因(RET)+MSI】BRAF、HARS、KIT、KRAS、NF1、NARS、NTRK1、PDGFRA、SDHA、SDHB、SDHC、SDHD。<section data-role=\"outer\" class=\"article135\" label=\"edit by 135editor\"><section class=\"_135editor\">\n\t<p style=\"text-align:center;\" align=\"center\">\n\t\t<img src=\"https://bcn.135editor.com/files/users/1087/10874567/202210/3JCsMk53_HQUw.jpg?x-bce-process=image/auto-orient,o_1\" alt=\"\" style=\"box-sizing:border-box;vertical-align: inherit; width: 319px;\" draggable=\"false\" width=\"319\" data-width=\"319px\" data-ratio=\"0.2857142857142857\" data-w=\"763\">\n\t</p>\n</section></section>\n增加AKT1、ARAF、RAF1、FGFR1/2/3\t19个体系突变基因+MSI",
+            "series": "",
+            "subSeries": "",
+            "remarks": "广州金域关于开展“胃肠间质瘤、乳腺癌、卵巢癌、膀胱癌、前列腺癌、胰腺癌、黑色素瘤、mini套餐（FFPE/ctDNA)”以及“实体肿瘤精准诊疗Mini套餐（FFPE/ctDNA)”项目的通知"
+        }
+    ],
+    "api_version": "v1.4"
+}
