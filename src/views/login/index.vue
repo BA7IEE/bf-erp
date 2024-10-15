@@ -12,6 +12,7 @@ import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { Md5 } from "ts-md5";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -34,7 +35,7 @@ const { title } = useNav();
 
 const ruleForm = reactive({
   username: "admin",
-  password: "admin123"
+  password: ""
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
@@ -43,7 +44,11 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true;
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({
+          nickname: ruleForm.username,
+          password: Md5.hashStr(ruleForm.password), // 使用 MD5 进行密码哈希
+          return_data: 1
+        })
         .then(res => {
           if (res.success) {
             // 获取后端路由

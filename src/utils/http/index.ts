@@ -73,7 +73,10 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
-        const whiteList = ["/refresh-token", "/login"];
+        const whiteList = [
+          "https://api.23cc.cn/bf.php?s=SVIP.Sba7iee_MyApi.ARefreshToken",
+          "https://api.23cc.cn/bf.php/?s=SVIP.Sba7iee_MyApi.ALogin"
+        ];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
           : new Promise(resolve => {
@@ -86,10 +89,27 @@ class PureHttp {
                     PureHttp.isRefreshing = true;
                     // token过期刷新
                     useUserStoreHook()
-                      .handRefreshToken({ refreshToken: data.refreshToken })
+                      .handRefreshToken({
+                        refreshToken: data.refreshToken,
+                        return_data: 1 // 数据返回结构设置为简洁结果
+                      })
                       .then(res => {
                         const token = res.data.accessToken;
                         config.headers["Authorization"] = formatToken(token);
+                        // 将token添加到请求体中
+                        if (config.method?.toLowerCase() === "get") {
+                          // 对于 GET 请求，可以将 token 作为查询参数
+                          config.params = {
+                            ...config.params,
+                            accessToken: token
+                          };
+                        } else {
+                          // 对于其他请求方法，将 token 添加到请求体
+                          config.data = {
+                            ...config.data,
+                            accessToken: token
+                          };
+                        }
                         PureHttp.requests.forEach(cb => cb(token));
                         PureHttp.requests = [];
                       })
@@ -99,6 +119,20 @@ class PureHttp {
                   }
                   resolve(PureHttp.retryOriginalRequest(config));
                 } else {
+                  // 将token添加到请求体中
+                  if (config.method?.toLowerCase() === "get") {
+                    // 对于 GET 请求，可以将 token 作为查询参数
+                    config.params = {
+                      ...config.params,
+                      accessToken: data.accessToken
+                    };
+                  } else {
+                    // 对于其他请求方法，将 token 添加到请求体
+                    config.data = {
+                      ...config.data,
+                      accessToken: data.accessToken
+                    };
+                  }
                   config.headers["Authorization"] = formatToken(
                     data.accessToken
                   );
