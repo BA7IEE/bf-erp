@@ -1,0 +1,74 @@
+getList接口文档
+export const getList = (data?: object) => {
+  return http.request<Result>(
+    "post",
+    "https://api.23cc.cn/bf.php?s=SVIP.Sba7iee_MyApi.AGetList",
+    {
+      data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+  );
+};
+接口参数：
+return_data=1（必填）
+page：整数 分页
+perpage：整数 分页数量
+model_name：字符串 数据库表名
+conditions:用于设置查询的过滤条件。键为字段名，值为要匹配的具体值。支持简单的等值匹配。对于复杂的条件（如大于、小于、IN 等），请直接使用原生 SQL 语法字符串作为键。示例: { "product_category < ?": 10, "product_lab": 1, "settlement_price < ?": 500, "standard_charge > ?": 100 }
+order:指定结果的排序规则。每个数组元素是一个字符串，包含字段名和排序方向（ASC 或 DESC）。示例: ["created_at DESC", "name ASC"]
+fields:指定返回结果中包含的字段。每个数组元素是一个字符串，表示要返回的字段名。示例: ["name", "description", "price"]
+
+返回数据结构：
+{
+    "success": true,
+    "err_code": 0,
+    "err_msg": "",
+    "total": 174,
+    "items": [
+        {
+            "id": 227,
+            "uuid": "",
+            "add_time": "2024-10-06 12:07:02",
+            "update_time": null,
+            "ext_data": null,
+            "product_name": "家族性基因突变位点检测",
+            "product_code": "JY010174",
+            "product_category": 2,
+            "product_lab": 1,
+            "method": "Sanger 测序法",
+            "sample_req": "2-3mlEDTA 抗凝外周血样本",
+            "transport_storage": "室温24h;冷藏72h;冷冻禁止",
+            "clinical_app": "用于遗传性肿瘤项目，先证者阳性，其他家属针对阳性位点验证。",
+            "report_cycle": "15 天",
+            "standard_charge": 400,
+            "remark": "【检测局限性】内含子或基因深部侧翼序列的致病突变可能漏检；当基因发生大范围缺失或插入以及染w色体数目或结构变异时，本检测有漏检可能。",
+            "settlement_price": 120,
+            "settlement_desc": null,
+            "settlement_channel": 5
+        },
+        {
+            "id": 226,
+            "uuid": "",
+            "add_time": "2024-10-06 12:07:02",
+            "update_time": null,
+            "ext_data": null,
+            "product_name": "APC 基因突变检测",
+            "product_code": "JY010173",
+            "product_category": 2,
+            "product_lab": 1,
+            "method": "NGS+MLPA",
+            "sample_req": "2-3mlEDTA 抗凝外周血样本",
+            "transport_storage": "室温24h;冷藏72h;冷冻禁止",
+            "clinical_app": "1. 家族性腺瘤性息肉病的鉴别诊断；2. 不同人群风险评估。",
+            "report_cycle": "15 天",
+            "standard_charge": 2400,
+            "remark": "【检测局限性】内含子或基因深部侧翼序列的致病突变可能漏检；当基因发生大范围缺失或插入以及染w色体数目或结构变异时，本检测有漏检可能。",
+            "settlement_price": 720,
+            "settlement_desc": null,
+            "settlement_channel": 5
+        }
+    ],
+    "api_version": "v1.0"
+}
