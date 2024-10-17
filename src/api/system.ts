@@ -9,9 +9,11 @@ type Result = {
   items: any[];
   success: boolean;
   data?: any;
+  update_row?: number;
   api_version: string;
 };
 
+// 获取数据列表
 export const getList = (data?: object) => {
   return http.request<Result>(
     "post",
@@ -25,23 +27,11 @@ export const getList = (data?: object) => {
   );
 };
 
-export const getid = (data?: object) => {
-  return http.request<Result>(
-    "post",
-    "https://api.23cc.cn/bf.php?s=App.Table.FreeQuery",
-    {
-      data,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }
-  );
-};
-
+// 更新数据
 export const updateData = (data?: object) => {
   return http.request<Result>(
     "post",
-    "https://api.23cc.cn/bf.php?s=App.Table.Update",
+    "https://api.23cc.cn/bf.php?s=SVIP.Sba7iee_MyApi.AUpdate",
     {
       data,
       headers: {

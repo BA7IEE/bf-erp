@@ -298,9 +298,9 @@ export function useRole() {
     onSearch();
   };
 
-  function openDialog(edit = true, row?: FormItemProps) {
+  function openDialog(edit = false, row?: FormItemProps) {
     addDialog({
-      title: !edit ? "修改患者档案" : "查看患者档案",
+      title: edit ? "查看患者档案" : "修改患者档案",
       props: {
         formInline: {
           patient_name: row?.patient_name ?? "",
@@ -334,12 +334,13 @@ export function useRole() {
           first_diagnosis_date: row?.first_diagnosis_date ?? "",
           primary_site: row?.primary_site ?? "",
           metastasis_site: row?.metastasis_site ?? "",
-          lab: row?.lab ?? ""
+          lab: row?.lab ?? "",
+          patient_gender: row?.patient_gender ?? null
         },
         libsList,
         disabled: edit
       },
-      width: "60%",
+      width: "65%",
       draggable: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
@@ -352,26 +353,63 @@ export function useRole() {
         if (!options.props.disabled) {
           FormRef.validate(async valid => {
             if (valid) {
-              let rowData = {
-                ...JSON.parse(JSON.stringify(row)),
-                ...curData
-              };
-              let form = {
-                id: (row as any).id,
-                data: JSON.stringify(rowData),
-                model_name: "PatientProfiles",
-                uuid: window.localStorage.getItem("uuid"),
-                token: window.localStorage.getItem("token")
-              };
-              console.log(form);
+              // 创建一个只包含更改字段的对象
+              let updateDataObj = {};
+              const numericFields = [
+                "patient_age",
+                "mother_age",
+                "father_age",
+                "relative1_age",
+                "relative2_age",
+                "patient_gender",
+                "relative1_gender",
+                "relative2_gender",
+                "first_diagnosis_date"
+              ];
 
-              const data = await updateData(toRaw(form));
-              if (data.err_code === 0) {
-                message(`修改成功`, {
-                  type: "success"
+              for (let key in curData) {
+                if (curData[key] !== row[key]) {
+                  if (numericFields.includes(key)) {
+                    if (curData[key] === "" || curData[key] === null) {
+                      // 只有当原始值不为 null 时才更新
+                      if (row[key] !== null) {
+                        updateDataObj[key] = null;
+                      }
+                    } else {
+                      updateDataObj[key] = curData[key];
+                    }
+                  } else if (curData[key] !== "" && curData[key] !== null) {
+                    // 对于非数字字段，只有当新值不为空时才更新
+                    updateDataObj[key] = curData[key];
+                  }
+                }
+              }
+
+              let form = {
+                return_data: 1,
+                model_name: "PatientProfiles",
+                id: (row as any).id,
+                update_data: JSON.stringify(updateDataObj)
+              };
+
+              try {
+                const data = await updateData(toRaw(form));
+                if (data.success && data.err_code === 0) {
+                  message(`修改成功`, {
+                    type: "success"
+                  });
+                  done(); // 关闭弹框
+                  onSearch(); // 刷新表格数据
+                } else {
+                  message(`修改失败：${data.err_msg}`, {
+                    type: "error"
+                  });
+                }
+              } catch (error) {
+                console.error("更新数据时出错:", error);
+                message(`更新失败：${error.message || "未知错误"}`, {
+                  type: "error"
                 });
-                done(); // 关闭弹框
-                onSearch(); // 刷新表格数据
               }
             }
           });

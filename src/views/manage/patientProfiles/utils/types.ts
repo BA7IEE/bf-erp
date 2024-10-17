@@ -5,6 +5,8 @@ interface FormItemProps {
   patient_name: string;
   /** 患者民族 */
   patient_ethnicity: string;
+  patient_age: number | null;
+  patient_gender: number | null;
   /** 患者母亲姓名 */
   mother_name: string;
   // 患者母亲年龄
