@@ -33,124 +33,124 @@ export function useRole() {
     {
       label: "ID",
       prop: "id",
-      minWidth: 100,
+      minWidth: 50,
       fixed: true
     },
     {
-      label: "患者姓名",
+      label: "姓名",
       prop: "patient_name",
-      minWidth: 100,
+      minWidth: 80,
       fixed: true
     },
     {
-      label: "患者性别",
+      label: "性别",
       prop: "patient_gender",
-      minWidth: 100,
+      minWidth: 50,
       formatter: ({ patient_gender }) => {
-        return patient_gender === 1 ? "男" : patient_gender === 0 ? "女" : "";
+        return patient_gender === 1 ? "男" : patient_gender === 2 ? "女" : "";
       }
     },
     {
-      label: "患者年龄",
+      label: "年龄",
       prop: "patient_age",
-      minWidth: 100
+      minWidth: 50
     },
     {
-      label: "患者民族",
+      label: "民族",
       prop: "patient_ethnicity",
       minWidth: 100
     },
     {
-      label: "患者母亲姓名",
+      label: "母亲姓名",
       prop: "mother_name",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者母亲年龄",
+      label: "母亲年龄",
       prop: "mother_age",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者母亲民族",
+      label: "母亲民族",
       prop: "mother_ethnicity",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者父亲姓名",
+      label: "父亲姓名",
       prop: "father_name",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者父亲年龄",
+      label: "父亲年龄",
       prop: "father_age",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者父亲民族",
+      label: "父亲民族",
       prop: "father_ethnicity",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者亲属1称谓",
+      label: "亲属1称谓",
       prop: "relative1_title",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者亲属1姓名",
+      label: "亲属1姓名",
       prop: "relative1_name",
-      minWidth: 110
+      minWidth: 100
     },
     {
-      label: "患者亲属1性别",
+      label: "亲属1性别",
       prop: "relative1_gender",
       minWidth: 110,
       formatter: ({ relative1_gender }) => {
         return relative1_gender === 1
           ? "男"
-          : relative1_gender === 0
+          : relative1_gender === 2
             ? "女"
             : "";
       }
     },
     {
-      label: "患者亲属1年龄",
+      label: "亲属1年龄",
       prop: "relative1_age",
       minWidth: 110
     },
     {
-      label: "患者亲属1民族",
+      label: "亲属1民族",
       prop: "relative1_ethnicity",
       minWidth: 110
     },
     {
-      label: "患者亲属2称谓",
+      label: "亲属2称谓",
       prop: "relative2_title",
       minWidth: 110
     },
     {
-      label: "患者亲属2姓名",
+      label: "亲属2姓名",
       prop: "relative2_name",
       minWidth: 110
     },
     {
-      label: "患者亲属2性别",
+      label: "亲属2性别",
       prop: "relative2_gender",
       minWidth: 110,
       formatter: ({ relative2_gender }) => {
         return relative2_gender === 1
           ? "男"
-          : relative2_gender === 0
+          : relative2_gender === 2
             ? "女"
             : "";
       }
     },
     {
-      label: "患者亲属2年龄",
+      label: "亲属2年龄",
       prop: "relative2_age",
       minWidth: 110
     },
     {
-      label: "患者亲属2民族",
+      label: "亲属2民族",
       prop: "relative2_ethnicity",
       minWidth: 110
     },
@@ -165,12 +165,12 @@ export function useRole() {
       minWidth: 200
     },
     {
-      label: "患者电话",
+      label: "电话",
       prop: "patient_phone",
       minWidth: 150
     },
     {
-      label: "患者身份证号",
+      label: "身份证号",
       prop: "patient_id_card",
       minWidth: 170
     },
