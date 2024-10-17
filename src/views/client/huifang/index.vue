@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 导入所需的组件和函数
 import { useRole } from "./utils/hook";
 import { ref, computed, nextTick, onMounted } from "vue";
 import { PureTableBar } from "@/components/RePureTableBar";
@@ -10,8 +11,7 @@ import {
   useResizeObserver
 } from "@pureadmin/utils";
 
-// import Database from "@iconify-icons/ri/database-2-line";
-// import More from "@iconify-icons/ep/more-filled";
+// 导入图标组件
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -20,10 +20,12 @@ import AddFill from "@iconify-icons/ri/add-circle-line";
 import Close from "@iconify-icons/ep/close";
 import Check from "@iconify-icons/ep/check";
 
+// 定义组件选项
 defineOptions({
   name: "SystemRole"
 });
 
+// 计算属性：定义图标的样式类
 const iconClass = computed(() => {
   return [
     "w-[22px]",
@@ -41,12 +43,14 @@ const iconClass = computed(() => {
   ];
 });
 
+// 创建响应式引用
 const treeRef = ref();
 const formRef = ref();
 const tableRef = ref();
 const contentRef = ref();
 const treeHeight = ref();
 
+// 使用 useRole hook 获取所需的数据和方法
 const {
   form,
   isShow,
@@ -55,8 +59,6 @@ const {
   columns,
   rowStyle,
   dataList,
-  treeData,
-  treeProps,
   isLinkage,
   pagination,
   isExpandAll,
@@ -74,8 +76,11 @@ const {
   handleSelectionChange
 } = useRole(treeRef);
 
+// 组件挂载后执行的操作
 onMounted(() => {
+  // 执行搜索操作
   onSearch();
+  // 监听内容区域大小变化，调整树形控件高度
   useResizeObserver(contentRef, async () => {
     await nextTick();
     delay(60).then(() => {
@@ -89,12 +94,14 @@ onMounted(() => {
 
 <template>
   <div class="main">
+    <!-- 搜索表单 -->
     <el-form
       ref="formRef"
       :inline="true"
       :model="form"
       class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
     >
+      <!-- 账户选择 -->
       <el-form-item label="账户：" prop="account_id">
         <el-select
           v-model="form.account_id"
@@ -110,6 +117,7 @@ onMounted(() => {
           />
         </el-select>
       </el-form-item>
+      <!-- 手机号输入 -->
       <el-form-item label="手机号：" prop="phone_number">
         <el-input
           v-model="form.phone_number"
@@ -118,6 +126,7 @@ onMounted(() => {
           class="!w-[180px]"
         />
       </el-form-item>
+      <!-- 状态选择 -->
       <el-form-item label="状态：" prop="state">
         <el-select
           v-model="form.state"
@@ -131,6 +140,7 @@ onMounted(() => {
           <el-option label="不达标" value="4" />
         </el-select>
       </el-form-item>
+      <!-- 搜索和重置按钮 -->
       <el-form-item>
         <el-button
           type="primary"
@@ -146,10 +156,12 @@ onMounted(() => {
       </el-form-item>
     </el-form>
 
+    <!-- 内容区域 -->
     <div
       ref="contentRef"
       :class="['flex', deviceDetection() ? 'flex-wrap' : '']"
     >
+      <!-- 表格区域 -->
       <PureTableBar
         :class="[isShow && !deviceDetection() ? '!w-[60vw]' : 'w-full']"
         style="transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
@@ -157,15 +169,17 @@ onMounted(() => {
         :columns="columns"
         @refresh="onSearch"
       >
+        <!-- 新增按钮 -->
         <template #buttons>
           <el-button
             type="primary"
             :icon="useRenderIcon(AddFill)"
             @click="openDialog()"
           >
-            新增角色
+            新增
           </el-button>
         </template>
+        <!-- 表格主体 -->
         <template v-slot="{ size, dynamicColumns }">
           <pure-table
             ref="tableRef"
@@ -188,6 +202,7 @@ onMounted(() => {
             @page-size-change="handleSizeChange"
             @page-current-change="handleCurrentChange"
           >
+            <!-- 操作列 -->
             <template #operation="{ row }">
               <el-button
                 class="reset-margin"
@@ -200,7 +215,7 @@ onMounted(() => {
                 修改
               </el-button>
               <el-popconfirm
-                :title="`是否确认删除角色名称为${row.name}的这条数据`"
+                :title="`是否确认删除${row.phone_number}这条数据`"
                 @confirm="handleDelete(row)"
               >
                 <template #reference>
@@ -215,107 +230,26 @@ onMounted(() => {
                   </el-button>
                 </template>
               </el-popconfirm>
-
-              <!-- <el-dropdown>
-              <el-button
-                class="ml-3 mt-[2px]"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(More)"
-              />
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Menu)"
-                      @click="handleMenu"
-                    >
-                      菜单权限
-                    </el-button>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Database)"
-                      @click="handleDatabase"
-                    >
-                      数据权限
-                    </el-button>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown> -->
             </template>
           </pure-table>
         </template>
       </PureTableBar>
-
-      <div
-        v-if="isShow"
-        class="!min-w-[calc(100vw-60vw-268px)] w-full mt-2 px-2 pb-2 bg-bg_color ml-2 overflow-auto"
-      >
-        <div class="flex justify-between w-full px-3 pt-5 pb-4">
-          <div class="flex">
-            <span :class="[iconClass, 'ml-2']">
-              <IconifyIconOffline
-                v-tippy="{
-                  content: '存菜单权限'
-                }"
-                class="dark:text-white"
-                width="18px"
-                height="18px"
-                :icon="Check"
-                @click="handleSave"
-              />
-            </span>
-          </div>
-          <p class="font-bold truncate">
-            菜单权限
-            {{ `${curRow?.name ? `（${curRow.name}）` : ""}` }}
-          </p>
-        </div>
-        <el-input
-          v-model="treeSearchValue"
-          placeholder="请输入菜单进行搜索"
-          class="mb-1"
-          clearable
-          @input="onQueryChanged"
-        />
-        <div class="flex flex-wrap">
-          <el-checkbox v-model="isExpandAll" label="展开/折叠" />
-          <el-checkbox v-model="isSelectAll" label="全选/全不选" />
-          <el-checkbox v-model="isLinkage" label="父子联动" />
-        </div>
-        <el-tree-v2
-          ref="treeRef"
-          show-checkbox
-          :data="treeData"
-          :props="treeProps"
-          :height="treeHeight"
-          :check-strictly="!isLinkage"
-        />
-      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+/* 下拉菜单样式 */
 :deep(.el-dropdown-menu__item i) {
   margin: 0;
 }
 
+/* 主内容区域样式 */
 .main-content {
   margin: 24px 24px 0 !important;
 }
 
+/* 搜索表单样式 */
 .search-form {
   :deep(.el-form-item) {
     margin-bottom: 12px;
