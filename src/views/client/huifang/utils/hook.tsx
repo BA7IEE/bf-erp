@@ -7,7 +7,7 @@ import { addDialog } from "@/components/ReDialog"; // 导入添加对话框的�
 import type { FormItemProps } from "../utils/types"; // 导入表单项属性的类型定义
 import type { PaginationProps } from "@pureadmin/table"; // 导入分页属性的类型定义
 import { deviceDetection } from "@pureadmin/utils"; // 导入设备检测功能
-import { getList } from "@/api/system"; // 导入获取列表数据的API函数
+import { getList, updateData, createData, deleteData } from "@/api/system"; // 导入获取列表数据的API函数
 import { type Ref, reactive, ref, h, onMounted, onUnmounted } from "vue"; // 导入Vue 3的组合式API相关功能
 import duration from "dayjs/plugin/duration";
 
@@ -120,9 +120,26 @@ export function useRole(treeRef: Ref) {
   ];
 
   // 处理删除操作的函数
-  function handleDelete(row) {
-    message(`您删除了${row.phone_number}这条数据`, { type: "success" });
-    onSearch(); // 删除后重新搜索更新数据
+  async function handleDelete(row) {
+    try {
+      const params = {
+        return_data: 1,
+        model_name: "Reminders",
+        ids: JSON.stringify([row.id])
+      };
+
+      const response = await deleteData(params);
+
+      if (response.success) {
+        message(`成功删除${row.phone_number}这条数据`, { type: "success" });
+        onSearch(); // 删除后重新搜索更新数据
+      } else {
+        message(response.err_msg || "删除失败", { type: "error" });
+      }
+    } catch (error) {
+      console.error("删除失败:", error);
+      message("删除失败", { type: "error" });
+    }
   }
 
   // 处理每页显示数量变化的函数
@@ -194,11 +211,15 @@ export function useRole(treeRef: Ref) {
     addDialog({
       title: `${title}回访信息`,
       props: {
-        formInline: {
-          name: row?.name ?? "",
-          code: row?.code ?? "",
-          remark: row?.remark ?? ""
-        }
+        formInline: row
+          ? { ...row }
+          : {
+              account_id: "",
+              phone_number: "",
+              start_time: "",
+              end_time: "",
+              state: "1" // 默认状态为待处理
+            }
       },
       width: "40%",
       draggable: true,
@@ -209,23 +230,69 @@ export function useRole(treeRef: Ref) {
       beforeSure: (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
-        function chores() {
-          message(`您${title}${curData.phone_number}这条数据`, {
-            type: "success"
-          });
-          done(); // 关闭弹框
-          onSearch(); // 刷新表格数据
-        }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
-            console.log("curData", curData);
-            // 表单规则校验通过
-            if (title === "新增") {
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
-            } else {
-              // 实际开发先调用修改接口，再进行下面操作
-              chores();
+            try {
+              if (title === "新增") {
+                const params = {
+                  return_data: 1,
+                  model_name: "Reminders",
+                  check_field: JSON.stringify(["phone_number"]),
+                  insert_data: JSON.stringify({
+                    account_id: curData.account_id,
+                    phone_number: curData.phone_number,
+                    start_time: curData.start_time,
+                    end_time: curData.end_time,
+                    state: curData.state
+                  })
+                };
+                const response = await createData(params);
+                if (response.success) {
+                  message(`${title}成功`, { type: "success" });
+                  onSearch(); // 刷新列表
+                } else {
+                  message(response.err_msg || `${title}失败`, {
+                    type: "error"
+                  });
+                }
+              } else {
+                const originalData = row || {};
+                const changedData = {};
+
+                // 比较并只包含修改过的字段
+                for (const key in curData) {
+                  if (curData[key] !== originalData[key]) {
+                    changedData[key] = curData[key];
+                  }
+                }
+
+                // 如果没有修改任何数据，则不发送请求
+                if (Object.keys(changedData).length === 0) {
+                  message("没有数据被修改", { type: "info" });
+                  done();
+                  return;
+                }
+
+                const params = {
+                  return_data: 1,
+                  id: curData.id,
+                  model_name: "Reminders",
+                  update_data: JSON.stringify(changedData)
+                };
+                const response = await updateData(params);
+                if (response.success) {
+                  message(`${title}成功`, { type: "success" });
+                  onSearch(); // 刷新列表
+                } else {
+                  message(response.err_msg || `${title}失败`, {
+                    type: "error"
+                  });
+                }
+              }
+              done(); // 关闭对话框
+            } catch (error) {
+              console.error(`Failed to ${title}:`, error);
+              message(`${title}失败`, { type: "error" });
             }
           }
         });

@@ -1,0 +1,31 @@
+接口导入：import { createData } from "@/api/system"; 
+表单名：Reminders
+字段：
+id
+账户(account_id)	
+手机号(phone_number)	
+开始时间(start_time)	
+截止时间(end_time)	
+状态(state)：1=待处理，2=已过期，3=已达标，4=不达标
+
+
+接口参数：
+return_data=1（必填）返回简洁的数据结构
+model_name：（必填）字符串 数据库表名
+insert_data（必填）要插入的数据json，其中键为字段名，值为对应的数据。示例：{"role_name":"41","role_code":"12"}
+check_field：用于检查重复数据的字段数组。如果提供此参数，系统会在插入新数据前检查是否已存在具有相同指定字段值的记录。注意：insert_data数据中必须包含此字段的数据，用作检测重复的依据。多个检测字段用英文逗号分割。例如：check_field=["name","age"]，表示同时检测名字和年龄。请留意字段类型的相等性判断，如字符串类型的字段不能在insert_data参数中传整型参数。
+成功
+{
+    "success": true,
+    "err_code": 0,
+    "err_msg": "",
+    "id": "9",
+    "api_version": "v1.2"
+}
+数据已存在
+{
+    "success": false,
+    "err_code": 2,
+    "err_msg": "数据已存在",
+    "api_version": "v1.2"
+}

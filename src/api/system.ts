@@ -40,3 +40,31 @@ export const updateData = (data?: object) => {
     }
   );
 };
+
+// 添加数据
+export const createData = (data?: object) => {
+  return http.request<Result>(
+    "post",
+    "https://api.23cc.cn/bf.php?s=SVIP.Sba7iee_MyApi.ACreate",
+    {
+      data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+  );
+};
+
+// 删除数据
+export const deleteData = (data?: object) => {
+  return http.request<Result>(
+    "post",
+    "https://api.23cc.cn/bf.php?s=SVIP.Sba7iee_MyApi.ADelete",
+    {
+      data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }
+  );
+};

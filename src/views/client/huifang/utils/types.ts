@@ -4,7 +4,6 @@ interface FormItemProps {
   id: string;
   name: string;
   code: string;
-  remark: string;
   account_id: string;
   phone_number: string;
   start_time: string;

@@ -86,14 +86,5 @@ defineExpose({ getRef });
         <el-option label="不达标" value="4" />
       </el-select>
     </el-form-item>
-
-    <!-- 备注文本域 -->
-    <el-form-item label="备注" prop="remark">
-      <el-input
-        v-model="newFormInline.remark"
-        type="textarea"
-        placeholder="请输入备注信息"
-      />
-    </el-form-item>
   </el-form>
 </template>

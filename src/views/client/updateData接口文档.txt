@@ -1,0 +1,24 @@
+接口导入：import { updateData } from "@/api/system"; 
+表单名：Reminders
+字段：
+id
+账户(account_id)	
+手机号(phone_number)	
+开始时间(start_time)	
+截止时间(end_time)	
+状态(state)：1=待处理，2=已过期，3=已达标，4=不达标
+
+
+接口参数：
+return_data=1（必填）返回简洁的数据结构
+id（必填）待更新的数据ID
+model_name：字符串 数据库表名
+update_data：json格式包含要更新的字段和对应的新值。只需包含要更新的字段，不需要更新的字段可以省略。示例：{ "title": "更新后的文章标题", "content": "这是更新后的文章内容。", "category_id": 3, "is_published": true }
+返回数据结构：
+{
+    "success": true,
+    "err_code": 0,
+    "err_msg": "",
+    "update_row": 1,
+    "api_version": "v1.2"
+}
