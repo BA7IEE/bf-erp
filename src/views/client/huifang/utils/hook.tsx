@@ -16,6 +16,20 @@ dayjs.extend(duration);
 // 定义一个名为useRole的函数，这是一个自定义的Vue组合式函数（也称为"组合式API"或"hook"）
 // 它接受一名为treeRef的参数，这个参数是一个引用，可能指向一个树形组件
 export function useRole(treeRef: Ref) {
+  const stateMap = {
+    "1": "待处理",
+    "2": "已过期",
+    "3": "已达标",
+    "4": "不达标"
+  };
+
+  const reverseStateMap = {
+    待处理: "1",
+    已过期: "2",
+    已达标: "3",
+    不达标: "4"
+  };
+
   // 使用reactive创建一个响应式的表单对象，包含多个字段
   const form = reactive({
     account_id: "", // 账户ID
@@ -219,13 +233,16 @@ export function useRole(treeRef: Ref) {
       title: `${title}回访信息`,
       props: {
         formInline: row
-          ? { ...row }
+          ? {
+              ...row,
+              state: stateMap[row.state] || row.state
+            }
           : {
               account_id: "",
               phone_number: "",
               start_time: "",
               end_time: "",
-              state: "1" // 默认状态为待处理
+              state: "待处理" // 默认状态为待处理
             }
       },
       width: "40%",
@@ -256,7 +273,7 @@ export function useRole(treeRef: Ref) {
                     phone_number: curData.phone_number,
                     start_time: curData.start_time,
                     end_time: curData.end_time,
-                    state: curData.state
+                    state: reverseStateMap[curData.state] || curData.state
                   })
                 };
                 const response = await createData(params);
@@ -275,7 +292,10 @@ export function useRole(treeRef: Ref) {
                 // 比较并只包含修改过的字段
                 for (const key in curData) {
                   if (curData[key] !== originalData[key]) {
-                    changedData[key] = curData[key];
+                    changedData[key] =
+                      key === "state"
+                        ? reverseStateMap[curData[key]] || curData[key]
+                        : curData[key];
                   }
                 }
 

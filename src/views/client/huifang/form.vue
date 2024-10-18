@@ -101,12 +101,10 @@ function handleTimeInput(field: "start_time" | "end_time") {
     <!-- 状态选择下拉框 -->
     <el-form-item label="状态" prop="state">
       <el-select v-model="newFormInline.state" placeholder="请选择状态">
-        <el-option
-          v-for="option in stateOptions"
-          :key="option.value"
-          :label="option.label"
-          :value="option.value"
-        />
+        <el-option label="待处理" value="待处理" />
+        <el-option label="已过期" value="已过期" />
+        <el-option label="已达标" value="已达标" />
+        <el-option label="不达标" value="不达标" />
       </el-select>
     </el-form-item>
   </el-form>
