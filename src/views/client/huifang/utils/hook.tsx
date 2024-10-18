@@ -264,18 +264,27 @@ export function useRole(treeRef: Ref) {
           if (valid) {
             try {
               if (title === "新增") {
+                const insertData = {};
+                for (const key in curData) {
+                  if (
+                    curData[key] !== "" &&
+                    curData[key] !== null &&
+                    curData[key] !== undefined
+                  ) {
+                    insertData[key] =
+                      key === "state"
+                        ? reverseStateMap[curData.state] || curData.state
+                        : curData[key];
+                  }
+                }
+
                 const params = {
                   return_data: 1,
                   model_name: "Reminders",
                   check_field: JSON.stringify(["phone_number", "account_id"]),
-                  insert_data: JSON.stringify({
-                    account_id: curData.account_id,
-                    phone_number: curData.phone_number,
-                    start_time: curData.start_time,
-                    end_time: curData.end_time,
-                    state: reverseStateMap[curData.state] || curData.state
-                  })
+                  insert_data: JSON.stringify(insertData)
                 };
+
                 const response = await createData(params);
                 if (response.success) {
                   message(`${title}成功`, { type: "success" });
