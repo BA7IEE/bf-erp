@@ -3,6 +3,7 @@
 import { ref } from "vue";
 import { formRules } from "./utils/rule";
 import { FormProps } from "./utils/types";
+import dayjs from "dayjs";
 
 // 定义组件的属性，并设置默认值
 const props = withDefaults(defineProps<FormProps>(), {
@@ -33,6 +34,21 @@ function getRef() {
 
 // 将 getRef 函数暴露给父组件
 defineExpose({ getRef });
+
+function handleTimeInput(field: "start_time" | "end_time") {
+  const input = newFormInline.value[field];
+  const regex = /【(\d{2}-\d{2} \d{2}:\d{2}:\d{2})】/;
+  const match = input.match(regex);
+
+  if (match) {
+    const dateTime = match[1];
+    const currentYear = dayjs().year();
+    const fullDateTime = `${currentYear}-${dateTime}`;
+    newFormInline.value[field] = dayjs(fullDateTime).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
+  }
+}
 </script>
 
 <template>
@@ -66,19 +82,19 @@ defineExpose({ getRef });
 
     <!-- 开始时间选择器 -->
     <el-form-item label="开始时间" prop="start_time">
-      <el-date-picker
+      <el-input
         v-model="newFormInline.start_time"
-        type="datetime"
-        placeholder="选择开始时间"
+        placeholder="请输入开始时间,例如:【10-19 02:53:41】"
+        @input="handleTimeInput('start_time')"
       />
     </el-form-item>
 
     <!-- 截止时间选择器 -->
     <el-form-item label="截止时间" prop="end_time">
-      <el-date-picker
+      <el-input
         v-model="newFormInline.end_time"
-        type="datetime"
-        placeholder="选择截止时间"
+        placeholder="请输入截止时间,例如:【10-19 02:53:41】"
+        @input="handleTimeInput('end_time')"
       />
     </el-form-item>
 
