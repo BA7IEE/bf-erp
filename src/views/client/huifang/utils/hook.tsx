@@ -14,7 +14,7 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 // 定义一个名为useRole的函数，这是一个自定义的Vue组合式函数（也称为"组合式API"或"hook"）
-// 它接受一个名为treeRef的参数，这个参数是一个引用，可能指向一个树形组件
+// 它接受一名为treeRef的参数，这个参数是一个引用，可能指向一个树形组件
 export function useRole(treeRef: Ref) {
   // 使用reactive创建一个响应式的表单对象，包含多个字段
   const form = reactive({
@@ -41,6 +41,13 @@ export function useRole(treeRef: Ref) {
   const accountOptions = [
     { label: "A02", value: "A02" },
     { label: "A05", value: "A05" }
+  ];
+
+  const stateOptions = [
+    { label: "待处理", value: "1" },
+    { label: "已过期", value: "2" },
+    { label: "已达标", value: "3" },
+    { label: "不达标", value: "4" }
   ];
 
   // 定义树形结构的属性
@@ -226,7 +233,13 @@ export function useRole(treeRef: Ref) {
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
-      contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
+      contentRenderer: () =>
+        h(editForm, {
+          ref: formRef,
+          formInline: null,
+          accountOptions,
+          stateOptions
+        }),
       beforeSure: (done, { options }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
@@ -237,7 +250,7 @@ export function useRole(treeRef: Ref) {
                 const params = {
                   return_data: 1,
                   model_name: "Reminders",
-                  check_field: JSON.stringify(["phone_number"]),
+                  check_field: JSON.stringify(["phone_number", "account_id"]),
                   insert_data: JSON.stringify({
                     account_id: curData.account_id,
                     phone_number: curData.phone_number,
@@ -398,6 +411,7 @@ export function useRole(treeRef: Ref) {
     isSelectAll,
     treeSearchValue,
     accountOptions,
+    stateOptions,
     onSearch,
     resetForm,
     openDialog,

@@ -10,8 +10,11 @@ interface FormItemProps {
   end_time: string;
   state: string;
 }
+
 interface FormProps {
   formInline: FormItemProps;
+  accountOptions: { label: string; value: string }[];
+  stateOptions: { label: string; value: string }[];
 }
 
 export type { FormItemProps, FormProps };

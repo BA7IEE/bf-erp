@@ -16,7 +16,9 @@ const props = withDefaults(defineProps<FormProps>(), {
     start_time: "",
     end_time: "",
     state: ""
-  })
+  }),
+  accountOptions: () => [],
+  stateOptions: () => []
 });
 
 // 创建一个响应式引用，用于表单验证
@@ -43,11 +45,14 @@ defineExpose({ getRef });
   >
     <!-- 账户输入框 -->
     <el-form-item label="账户" prop="account_id">
-      <el-input
-        v-model="newFormInline.account_id"
-        clearable
-        placeholder="请输入账户"
-      />
+      <el-select v-model="newFormInline.account_id" placeholder="请选择账户">
+        <el-option
+          v-for="option in accountOptions"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value"
+        />
+      </el-select>
     </el-form-item>
 
     <!-- 手机号输入框 -->
@@ -80,10 +85,12 @@ defineExpose({ getRef });
     <!-- 状态选择下拉框 -->
     <el-form-item label="状态" prop="state">
       <el-select v-model="newFormInline.state" placeholder="请选择状态">
-        <el-option label="待处理" value="1" />
-        <el-option label="已过期" value="2" />
-        <el-option label="已达标" value="3" />
-        <el-option label="不达标" value="4" />
+        <el-option
+          v-for="option in stateOptions"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value"
+        />
       </el-select>
     </el-form-item>
   </el-form>
