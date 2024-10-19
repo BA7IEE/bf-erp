@@ -304,6 +304,7 @@ export function useRole() {
       props: {
         formInline: {
           patient_name: row?.patient_name ?? "",
+          patient_age: row?.patient_age ?? "",
           patient_ethnicity: row?.patient_ethnicity ?? "",
           mother_name: row?.mother_name ?? "",
           mother_age: row?.mother_age ?? "",
