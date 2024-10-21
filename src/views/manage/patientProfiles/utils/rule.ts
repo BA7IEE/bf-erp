@@ -92,6 +92,9 @@ export const formRules = reactive(<FormRules>{
   clinical_stage: [
     { required: false, message: "肿瘤类型为选填项", trigger: "blur" }
   ],
+  tumor_type: [
+    { required: false, message: "肿瘤类型为选填项", trigger: "blur" }
+  ],
   clinical_diagnosis: [
     { required: false, message: "临床病理诊断为选填项", trigger: "blur" }
   ],

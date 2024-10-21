@@ -56,6 +56,8 @@ interface FormItemProps {
   //报告接收地址
   report_address: string;
   // 肿瘤类型
+  tumor_type: string;
+  // 临床分期
   clinical_stage: string;
   // 临床病理诊断
   clinical_diagnosis: string;

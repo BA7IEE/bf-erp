@@ -195,8 +195,13 @@ export function useRole() {
       minWidth: 160
     },
     {
-      label: "肿瘤类型",
+      label: "临床分期",
       prop: "clinical_stage",
+      minWidth: 100
+    },
+    {
+      label: "肿瘤类型",
+      prop: "tumor_type",
       minWidth: 100
     },
     {
@@ -331,6 +336,7 @@ export function useRole() {
           report_phone: row?.report_phone ?? "",
           report_address: row?.report_address ?? "",
           clinical_stage: row?.clinical_stage ?? "",
+          tumor_type: row?.tumor_type ?? "",
           clinical_diagnosis: row?.clinical_diagnosis ?? "",
           first_diagnosis_date: row?.first_diagnosis_date ?? "",
           primary_site: row?.primary_site ?? "",

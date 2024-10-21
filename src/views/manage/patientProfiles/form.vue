@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<FormProps>(), {
     report_phone: null, // 更新为 null
     report_address: "",
     clinical_stage: "",
+    tumor_type: "",
     clinical_diagnosis: "",
     first_diagnosis_date: null,
     primary_site: "",
@@ -230,7 +231,12 @@ defineExpose({ getRef });
     </el-form-item>
     <el-row :gutter="16">
       <el-col :span="6">
-        <el-form-item label="肿瘤类型" prop="clinical_stage">
+        <el-form-item label="类型" prop="tumor_type">
+          <el-input v-model="newFormInline.tumor_type" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="分期" prop="clinical_stage">
           <el-input v-model="newFormInline.clinical_stage" />
         </el-form-item>
       </el-col>
